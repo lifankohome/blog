@@ -1,5 +1,9 @@
 ## 深度好文博客 Base On ThinkPHP5
 
+### 预览：
+
+![布洛格截图](https://raw.githubusercontent.com/lifankohome/blog/master/screenshot.jpg)
+
 ### 安装：
 
  + 获取TP5源代码
@@ -69,6 +73,7 @@ www  WEB部署目录（或者子目录）
 
 ### 介绍：
 
+ + 基于Bootstrap3设计，响应式布局，性能稳定，部署简单。
  + 编辑器自动保存默认开启，关闭方法：把blog视图文件夹中的gnosis.html中第172行：autoSave(true)改为autoSave(false)或直接将其注释。
  + 编辑器默认开启图片作者水印，上传的图片会在右下角生成一个格式为【作者-深度好文】、12像素大小、自动颜色的水印，修改方法：blog控制器文件夹的Index.php中第131行：
  
