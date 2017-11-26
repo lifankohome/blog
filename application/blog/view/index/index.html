@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="renderer" content="webkit">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <title>深度好文博客</title>
+    <link rel="icon" href="__RES__/common/favicon.ico">
+    <link rel="stylesheet" href="__RES__/common/bootstrapv3.3.0.min.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/common/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/common/fakeLoader.css">
+    <link rel="stylesheet" href="__RES__/blog/style.css">
+    {eq name="mode" value="dark"}
+    <style>
+        body {
+            background-color: #333;
+        }
+
+        .starter-template {
+            margin-top: 80px;
+            color: whitesmoke;
+        }
+
+        a{
+            cursor: pointer;
+        }
+    </style>
+    {else/}
+    <style>
+        .starter-template {
+            margin-top: 80px;
+        }
+    </style>
+    {/eq}
+
+    <script src="__RES__/common/jquery-2.1.1.min.js"></script>
+    <script src="__RES__/common/fakeLoader.min.js"></script>
+    <script src="__RES__/common/bootstrapv3.3.0.min.js"></script>
+    <script src="__RES__/blog/jquery.slidereveal.min.js"></script>
+    <script src="__RES__/blog/jquery.qrcode.min.js"></script>
+    <script src="__RES__/blog/tip.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#slider').slideReveal({
+                position: "left",
+                trigger: $("#trigger"),
+                push: true,
+                width: 450
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="fakeLoader"></div>
+<div id="tip" style="color: whitesmoke"></div>
+<script type="text/javascript">
+    $("#fakeLoader").fakeLoader({
+        timeToHide: 1000,
+        bgColor: "#333",
+        spinner: "spinner1"
+    });
+</script>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a id="trigger" data-toggle="tooltip" data-placement="bottom" title="点击展开 / 关闭文章列表" class="navbar-brand"
+               style="font-weight: bold;font-size: 22px;cursor: pointer">深度好文</a>
+            {eq name="trigger" value="true"}
+            <script>$('#trigger').tooltip('show');</script>
+            {else/}
+            <script>$('#trigger').tooltip('hide');</script>
+            {/eq}
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="博客首页"><a href="/blog"
+                                                                                               class="icon-2x"><i
+                        class="icon-home"></i></a></li>
+
+                {empty name="username"}
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="登录"><a href="/blog/login"><i
+                        class="icon-signin"></i></a></li>
+                {else /}
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="退出 {$username}"><a href="/blog/logout"><i
+                        class="icon-off"></i></a></li>
+                {/empty}
+
+                {eq name="mode" value="dark"}
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="亮色模式"><a
+                        href="/blog/chMode"><i class="icon-circle"></i></a></li>
+                {else/}
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="暗色模式"><a
+                        href="/blog/chMode"><i class="icon-circle-blank"></i></a></li>
+                {/eq}
+
+                {notempty name="username"}
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="写文章">
+                    <a onclick="addDate()" data-toggle="modal" data-target="#myModal">
+                        <i class="icon-pencil"></i></a></li>
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="个人中心"><a href="/blog/zone"><i
+                        class="icon-cogs"></i></a></li>
+                {/notempty}
+
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="刷新文章"><a onclick="location.reload()"><i
+                        class="icon-repeat icon-spin"></i></a></li>
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="关于博客"><a href="/blog/about"><i
+                        class="icon-info-sign"></i></a></li>
+                <li class="cell" data-toggle="tooltip" data-placement="bottom" title="错误代码"><a href="/blog/errCode"><i
+                        class="icon-warning-sign"></i></a></li>
+            </ul>
+            <a class="visible-lg" style="float: right;padding: 15px 0" id="code">文章二维码
+                <div id="qrcode"><p style="text-align: center;color: #00A2D4">扫一扫在移动端阅读</p></div>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="starter-template">
+        <div id="slider"
+             style="width: 300px;color: white;background-color: #777;padding-top: 45px;overflow-y: auto;z-index: 1">
+            <ul style="font-family: 'Microsoft JhengHei UI';font-size: 18px;line-height: 35px">
+                <h2 style="color: #99d63a;font-weight: bold;text-align: center;margin-left: -40px;">文章列表</h2>
+                <hr style="margin: 0 0 0 -40px">
+                {volist name="contents" id="vo"}
+                <li>
+                    <a href="/blog/{$vo.id}" class="cell" data-toggle="tooltip" data-placement="top"
+                       title="阅读:{$vo.times}　赞:{$vo.good}　踩:{$vo.bad}">
+                        {$vo.head}
+                    </a>
+                    <span>{$vo.name}</span>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+        {eq name="content" value="default"}
+        <h1 class="topTitle"><span class='title'>这时候你才算长大</span><span class='author'>青年文摘</span></h1>
+        <hr style="opacity: 0.3">
+        <div class="lead">
+            <p>　　人总是要生病的,躺在床上，这时你先想起的是母亲；</p>
+            <p>　　你不自觉地向上仰起额头，似乎母亲的手掌即刻会像你小时那样，摩挲过你的额头.此时此刻你最想吃的,可不就是母亲做的那碗热汤面？</p>
+            <p>　　可是，母亲已经不在了；</p>
+            <p>　　你转而相信情人，盼望此时此刻他能将你搂在怀里，让他的温存和爱抚将你的病痛消解。可是你的企盼落了空；</p>
+            <p>　　你最终能够挣扎起来，摇摇晃晃地走到自来水龙头底下接杯凉水，喝得咕咚咕咚，味美竟如在五星级饭店喝矿泉水一样。
+                你惊奇地注视着这杯凉水，发现它一样可以解渴；</p>
+            <p>　　等你饿急了眼，还会在冰箱里搜出一块干面包，没有果酱也没有黄油，照样把它硬吃下去；</p>
+            <p>　　于是你发现，一个人关在屋子里生病，不但没有什么悲惨，相反感觉也许不错；</p>
+            <p>　　自此以后，你再不怕面对自己上街、自己下馆子、自己乐、自己笑、自己哭、自己应付天塌地陷的难题……
+                这时你才尝到从必然王国飞跃到自由王国的乐趣，你会感到“天马行空，独往独来”比和另一个人什么都绑在一起更好；</p>
+            <p>　　这时候你才算真正长大，虽然这一年你可能已经70岁了。</p>
+        </div>
+        <blockquote>日期：<code>2016/6/20 12:13</code></blockquote>
+        {else/}
+        <h1 class="topTitle"><span class='title'>{$content.head}</span><span class='author'>{$content.name}</span></h1>
+        <hr style="opacity: 0.3">
+        <div class="lead">
+            {$content.body}
+        </div>
+        <blockquote>
+            日期：<code>{$content.date}</code>
+            <i id='good' title='{$content.good}' class='icon-heart-empty' onclick='ViewPointGood();'><span
+                    style='color: #888' id='goodTip' class='cell' data-toggle='tooltip' data-placement='top'
+                    title='已有{$content.good}个喜欢'> 喜欢</span></i>
+            <i id='bad' title='{$content.bad}' class='icon-thumbs-down-alt' onclick='ViewPointBad();'><span
+                    style='color: #888' id='badTip' class='cell' data-toggle='tooltip' data-placement='top'
+                    title='已有{$content.bad}个踩'> 踩</span></i>
+        </blockquote><hr style="margin: 0 0 10px 0">
+        <i class="icon-comments-alt icon-2x"></i> 所有评论：
+        <div style='margin: 10px'>
+            <ul class='media-list'>
+                {foreach name="comment" item="vo"}
+                <li class='media'>
+                    <span class='pull-right text-info'><span data-toggle="tooltip" data-placement="top" title="多次举报让本条不再显示" class="jubao cell"><i class="icon-eye-close"></i></span>{$vo.date}</span>
+                    <div class='media-left'>
+                        <a href='javascript:void(0);'><img class='img-rounded' width='50px' src='__RES__/blog/logo/default.jpg'></a>
+                    </div>
+                    <div class='media-body'>
+                        <h4 class='media-heading text-primary' style="margin-top: 4px">{$key}</h4>
+                        <p>{$vo.text}</p>
+                    </div>
+                </li>
+                {/foreach}
+            </ul>
+            <div style='position: relative'>
+                <textarea id='comment' class='form-control' placeholder='说些什么...' style='resize:vertical;min-height: 80px;margin: 5px auto;background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898;background-blend-mode: multiply,multiply;color: white;'></textarea>
+                <button id='btnComment' onclick='comment()' type='button' class='btn btn-link disabled' style='color: wheat;position: absolute;bottom: 0;right: 1pc'>请输入10个以上字符</button>
+            </div>
+            <script>
+                $("#comment").on("keyup", function () {
+                    var comment = document.getElementById("comment").value;
+                    var btnComment = $("#btnComment");
+                    if (comment.length >= 10) {
+                        btnComment.text("点击发表");
+                        btnComment.removeClass("disabled");
+                    } else {
+                        var need = 10 - comment.length;
+                        btnComment.text("请继续输入" + need + "字符");
+                        btnComment.addClass("disabled");
+                    }
+                });
+            </script>
+        </div>
+        <script>
+            document.title = $('.title').text() + " - 深度好文";    //改变标签标题
+
+            var goodE = $("#good");
+            var badE = $("#bad");
+            var contentId = '{$content.id}';
+            function ViewPointGood() {
+                var good = goodE.attr("title");
+                var viewPoint = goodE.attr("class");
+                if (viewPoint == 'icon-heart-empty') { //如果心是空的则将获取到的值加一，否则不会加一
+                    good = parseInt(good) + 1;
+                }
+                $.get("/blog/service?option=viewPoint", {
+                    contentId: contentId,
+                    viewPoint: 'good',
+                    num: good
+                }, function (data) {
+                    if (data == "goodPlus") {
+                        goodE.attr("class", "icon-heart");
+                        tip("已推荐，感谢您的评价", "50%", "1", 2000, false);
+                        badE.hide(100);
+                    } else if (data == "goodMinus") {
+                        goodE.attr("class", "icon-heart-empty");
+                        tip("已取消推荐，感谢您的评价", "50%", "1", 2000, false);
+                        badE.show(100);
+                    }else {
+                        tip("操作失败！请稍后重试", "50%", "1", 2000, false);
+                    }
+                }).error(function () {
+                    tip("通讯出错，请稍后重试", "80%", "1", 2000, true);
+                });
+            }
+            function ViewPointBad() {
+                var bad = badE.attr("title");
+                var viewPoint = badE.attr("class");
+                if (viewPoint == 'icon-thumbs-down-alt') {
+                    bad = parseInt(bad) + 1;
+                }
+                $.get("/blog/service?option=viewPoint", {
+                    contentId: contentId,
+                    viewPoint: 'bad',
+                    num: bad
+                }, function (data) {
+                    if (data == "badPlus") {
+                        badE.attr("class", "icon-thumbs-down");
+                        tip("已踩，感谢您的评价", "50%", "1", 2000, false);
+                        goodE.fadeOut(300);
+                    } else if (data == "badMinus") {
+                        badE.attr("class", "icon-thumbs-down-alt");
+                        tip("已取消踩，感谢您的评价", "50%", "1", 2000, false);
+                        goodE.fadeIn(300);
+                    }else {
+                        tip("操作失败！请稍后重试", "50%", "1", 2000, false);
+                    }
+                }).error(function () {
+                    tip("通讯出错，请稍后重试", "80%", "1", 2000, true);
+                });
+            }
+
+            function comment() {
+                var title = '{$content.head}';
+                var comment = document.getElementById("comment").value;
+                if (comment.length < 10) {
+                    alert("评论不能少于10个字符")
+                } else {
+                    $.get("/blog/service?option=comment", {
+                        uuid: contentId,
+                        title: title,
+                        comment: comment,
+                        name: "{$username}"
+                    }, function (data) {
+                        if (data == "success") {
+                            document.getElementById("comment").value = "";
+                            tip("评论成功，刷新后显示", "80%", "1", 2000, true);
+                        }else {
+                            tip("评论失败，请稍后重试", "80%", "1", 2000, true);
+                        }
+                    }).error(function () {
+                        tip("通讯出错，请稍后重试", "80%", "1", 2000, true);
+                    });
+                }
+            }
+        </script>
+        {/eq}
+    </div>
+    <hr style="margin-top: 5px">
+    {eq name="mode" value="dark"}
+    <span style="padding-bottom: 20px;color: whitesmoke">{$app}</span>
+    {else/}
+    <span style="padding-bottom: 20px;color: #373737">{$app}</span>
+    {/eq}
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">请确认您的信息：</h4>
+            </div>
+            <form action="/blog/index/newGnosis" method="post">
+                <div class="modal-body">
+                    <h4>作者：{$username}</h4>
+                    <input type="hidden" name="author" value="{$username}">
+                    <h4>文章标题：<input name="titleText" placeholder="请在此处输入文章标题" type="text" required="required"
+                                    style="width: 300px;border: solid 1px #ec4545;font-size: 15px;line-height: 20px;padding: 3px">
+                    </h4>
+                    <h4 id="createDate"></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-warning">创建文章</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('.cell').tooltip();
+
+    function addDate() {
+        $("#createDate").text("创建时间：" + currentTime());
+    }
+    function currentTime() {
+        var now = new Date();
+
+        var year = now.getFullYear();       //年
+        var month = now.getMonth() + 1;     //月
+        var day = now.getDate();            //日
+
+        var hh = now.getHours();            //时
+        var mm = now.getMinutes();          //分
+
+        var clock = year + "/";
+
+        if (month < 10)
+            clock += "0";
+
+        clock += month + "/";
+
+        if (day < 10)
+            clock += "0";
+
+        clock += day + " ";
+
+        if (hh < 10)
+            clock += "0";
+
+        clock += hh + ":";
+        if (mm < 10) clock += '0';
+        clock += mm;
+        return (clock);
+    }
+
+    function toUTF8(str) {      //用于支持中文
+        var out, i, len, c;
+        out = "";
+        len = str.length;
+        for (i = 0; i < len; i++) {
+            c = str.charCodeAt(i);
+            if ((c >= 0x0001) && (c <= 0x007F)) {
+                out += str.charAt(i);
+            } else if (c > 0x07FF) {
+                out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+            } else {
+                out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+            }
+        }
+        return out;
+    }
+    $('#qrcode').qrcode(toUTF8(window.location.href));  //生成二维码
+</script>
+</body>
+</html>

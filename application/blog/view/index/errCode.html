@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>错误代码说明 - 深度好文博客</title>
+    <link rel="icon" href="__RES__/common/favicon.ico">
+</head>
+<body>
+<div style="width: 75%;margin: 1pc auto;background-color: #eee;padding: 2pc;border-radius: 1pc">
+    <h1>错误代码说明</h1>
+    <p>在某些特定情况下，你可能会跳转到错误提示页面，错误说明后面跟着一个Code。</p>
+    <p>一旦进入到这些页面，说明你有意或无意进行了敏感操作，而且这些操作可能会影响到博客平台的任何一篇文章。</p>
+    <hr style="margin: 3pc 0">
+    <p>作为博客的开发者，我有义务去保障文章的私有性和安全性。</p>
+    <p>敏感操作包括但不限于：</p>
+    <ul>
+        <li>频繁登录或注册</li>
+        <li>非正常途径访问个人中心</li>
+        <li>非正常途径访问编辑器</li>
+        <li>非正常途径修改文章名</li>
+        <li>调用任何无链接形式的API</li>
+    </ul>
+    <p style="color: #F40">每个用户初始有10次敏感访问机会，每次敏感操作扣除一次，不足10次的用户在无敏感操作的情况下会每天增加2次，发布文章后第二天计数器会直接变为10，超限后IP会被封锁。</p>
+    <p>深度好文博客&TRADE; 一直对爬虫友好，请勿对博客进行攻击。</p>
+    <hr style="margin: 3pc 0">
+    <h4>如果自己在正常使用博客过程中跳转到了错误提示页面，请联系我：lifankohome@163.com</h4>
+    <p style="text-align: right;font-size: 14px">{$app}</p>
+</div>
+<script>
+    console.log("21345:异常身份进入个人中心\n21445:异常身份修改标题\n21555:异常身份进入编辑器")
+</script>
+</body>
+</html>

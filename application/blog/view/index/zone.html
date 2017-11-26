@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的创作中心 - 深度好文</title>
+    <link rel="icon" href="__RES__/common/favicon.ico">
+    <link rel="stylesheet" href="__RES__/common/bootstrapv3.3.0.min.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/common/font-awesome.min.css">
+    <style>
+        body, table {
+            font-family: "Microsoft YaHei UI Light";
+            font-weight: 600;
+        }
+
+        table, th {
+            text-align: center;
+
+        }
+
+        th {
+            letter-spacing: 0.2em;
+        }
+
+        .top {
+            background-color: rgba(35, 59, 88, 0.71);
+        }
+
+        .btn a {
+            color: white
+        }
+    </style>
+    <script src="__RES__/common/jquery-2.1.1.min.js"></script>
+    <script src="__RES__/common/bootstrapv3.3.0.min.js"></script>
+    <script src="__RES__/blog/tip.min.js"></script>
+</head>
+<body>
+<div id="tip" style="color: whitesmoke"></div>
+{switch name="tip" }
+{case value="1"}
+<script>tip("修改题目成功！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="2"}
+<script>tip("修改题目失败，请重试！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="3"}
+<script>tip("密码修改成功！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="4"}
+<script>tip("密码修改失败，请重试！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="5"}
+<script>tip("文章成功发布！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="6"}
+<script>tip("文章发布失败，请重试！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="7"}
+<script>tip("文章下架成功！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="8"}
+<script>tip("文章下架失败，请重试！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="9"}
+<script>tip("文章已删除！", "50%", "1", 5000, false);</script>
+{/case}
+{case value="10"}
+<script>tip("文章删除失败，请重试！", "50%", "1", 5000, false);</script>
+{/case}
+{/switch}
+<div class="top">
+    <div class="container">
+        <p style="font-size: 60px;color: white;">
+            myZone
+            <span style="font-size: 25px">- {$username}
+                <a href="/blog/index/newPass?u={$username}" data-toggle="modal" data-target="#myModal" class="tip"
+                   data-toggle="tooltip" data-placement="right" title="修改密码"
+                   style="color: white;margin-left: 1pc">
+                    <i class="icon-key"></i>
+                </a>
+                <a href="/blog/logout" id="signOut" data-toggle="tooltip" data-placement="right" title="退出登录"
+                   style="color: white;margin-left: 1pc">
+                    <i class="icon-off"></i>
+                </a>
+            </span>
+            <a href="/blog" id="home" data-toggle="tooltip" data-placement="left" title="博客首页"
+               style="font-size: 18px;float: right;margin-top: 3pc;color: #46ceff">深度好文</a>
+        </p>
+        <script>
+            $('#signOut,#home,.tip').tooltip();
+        </script>
+        <div style="text-align: center;color: white;padding-bottom: 0.5pc">
+            <hr style="margin: 0.5pc 0">
+            <div class="col-xs-3">
+                <h4><i class="icon-edit">&nbsp;</i>总文章</h4>
+                <h5>{$passageGnosisNum} 篇</h5>
+            </div>
+            <div class="col-xs-3">
+                <h4><i class="icon-pencil">&nbsp;</i>总字数</h4>
+                <h5>{$passageGnosisLength} 字</h5>
+            </div>
+            <div class="col-xs-3">
+                <h4><i class="icon-eye-open">&nbsp;</i>总阅读</h4>
+                <h5>{$passageGnosisRead} 次</h5>
+            </div>
+            <div class="col-xs-3">
+                <h4><i class="icon-heart-empty">&nbsp;</i>总喜欢</h4>
+                <h5>{$passageGnosisGood} 次</h5>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h3>已发布的文章</h3>
+    <table class="table table-bordered">
+        <tr style="background-color: #6a819c;color: white">
+            <th>题目</th>
+            <th>历时</th>
+            <th>文章字数</th>
+            <th>发布时间</th>
+            <th>阅读(次)</th>
+            <th>赞(次)</th>
+            <th>踩(次)</th>
+            <th>功能</th>
+        </tr>
+        {volist name="passageGnosisTable" id="vo"}
+        <tr>
+            <td>{$vo.head}</td>
+            <td>{$vo.time}</td>
+            <td>{$vo.length}</td>
+            <td>{$vo.date}</td>
+            <td>{$vo.times}</td>
+            <td>{$vo.good}</td>
+            <td>{$vo.bad}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-info"><a href='/blog/gnosis/{$vo.id}'>Modify</a>
+                    </button>
+                    <button type="button" class="btn btn-xs btn-warning dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        {if condition="($vo.reEdit >0) "}
+                        <li><a href="/blog/rename?id={$vo.id}" data-toggle="modal" data-target="#myModal">修改题目/剩余{$vo.reEdit}次</a>
+                        </li>
+                        {/if}
+                        <li><a href="#">查看评论</a></li>
+                        <li><a href="/blog/service?option=withdraw&id={$vo.id}">下架文章</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {/volist}
+    </table>
+    <h3>未发布的文章</h3>
+    <table class="table table-bordered">
+        <tr style="background-color: #486738;color: white">
+            <th>题目</th>
+            <th>文章字数</th>
+            <th>创建时间</th>
+            <th>功能</th>
+        </tr>
+        {volist name="passageGnosisingTable" id="vo"}
+        <tr>
+            <td>{$vo.head}</td>
+            <td>{$vo.length}</td>
+            <td>{$vo.date}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-info"><a href='/blog/gnosis/{$vo.id}' target='_blank'>Modify</a>
+                    </button>
+                    <button type="button" class="btn btn-xs btn-warning dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/blog/rename?id={$vo.id}" data-toggle="modal" data-target="#myModal">修改题目</a></li>
+                        <li><a href='/blog/service?option=release&id={$vo.id}'>发布文章</a></li>
+                        <li><a href="/blog/service?option=delete&id={$vo.id}">删除文章</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {/volist}
+    </table>
+    <h3>被下架的文章</h3>
+    <table class="table table-bordered">
+        <tr style="background-color: #6a819c;color: white">
+            <th>题目</th>
+            <th>历时</th>
+            <th>文章字数</th>
+            <th>发布时间</th>
+            <th>阅读(次)</th>
+            <th>赞(次)</th>
+            <th>踩(次)</th>
+            <th>下架时间</th>
+            <th>功能</th>
+        </tr>
+        {volist name="passageGnosisedTable" id="vo"}
+        <tr>
+            <td>{$vo.head}</td>
+            <td>{$vo.time}</td>
+            <td>{$vo.length}</td>
+            <td>{$vo.date}</td>
+            <td>{$vo.times}</td>
+            <td>{$vo.good}</td>
+            <td>{$vo.bad}</td>
+            <td>{$vo.saved|date="Y-m-d H:i",###}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-info"><a href='/blog/{$vo.id}'>阅读</a>
+                    </button>
+                    <button type="button" class="btn btn-xs btn-warning dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href='/blog/gnosis/{$vo.id}'>编辑文章</a></li>
+                        <li><a href='#'>查看评论</a></li>
+                        <li><a href='/blog/service?option=delete&id={$vo.id}'>删除文章</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {/volist}
+    </table>
+    <div style="color: grey;line-height: 25px">
+        <details style="margin-top: 5px;cursor: pointer">
+            <summary>说明＆注意（点击展开）</summary>
+            1、未发布的文章不统计阅读次数<br>
+            2、已发布的文章题目仅可修改三次<br>
+            3、已发布的文章下架后才能进行删除<br>
+            4、下架后的文章会被锁定，无法发布<br>
+        </details>
+        <p style="text-align: center;border-top: solid 1px #ddd;margin: 1em 0;padding-top: 1em">{$app}</p>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modifyPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<script>
+    $('#myModal').on('hidden.bs.modal', function (e) {
+        location.reload();
+    })
+</script>
+</body>
+</html>

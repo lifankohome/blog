@@ -1,0 +1,91 @@
+/*图片显示最大限制*/
+img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/*二维码*/
+#code {
+    cursor: pointer;
+    position: relative;
+}
+
+#code:hover #qrcode {
+    opacity: 1;
+    top: 20px;
+}
+
+#qrcode {
+    position: absolute;
+    top: -310px;
+    padding: 10px 10px 5px 10px;
+    background-color: white;
+    border-radius: 6px;
+    right: -103px;
+    transition: all 0.5s 0s;
+}
+/*列表*/
+#slider ul li {
+    border-bottom: 1px #333 solid;
+    cursor: crosshair;
+    transition: all 0.3s 0s
+}
+
+#slider ul li:hover {
+    background-color: #fff
+}
+
+#slider ul li:hover a {
+    color: black
+}
+
+.cell {
+    color: white
+}
+
+#slider ul li span {
+    float: right;
+    font-size: 12px;
+    padding-right: 5px;
+    color: #f1ff39;
+}
+
+/*topTitle*/
+.topTitle{
+    text-align: center;
+}
+.author{
+    font-size: 12px;
+    margin-left: .5pc;
+    margin-right: -3pc;
+}
+
+/*内容*/
+.lead {
+    line-height: 1.5;
+    font-size: 18px;
+}
+/*导航*/
+.navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.nav a:not(.icon-2x) {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+/*点赞、点踩*/
+#good, #bad {
+    margin-left: 1pc;
+    cursor: pointer
+}
+/*举报*/
+.jubao {
+    color: #777;
+    opacity: 0;
+    margin-right: 1pc;
+    cursor: pointer;
+}
+.media:hover .jubao{
+    opacity: 1;
+}

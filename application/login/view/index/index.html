@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 深度好文博客</title>
+    <link rel="icon" href="__RES__/common/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="__RES__/common/bootstrapv3.3.0.min.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/login/slider.css">
+    <style>
+        body {
+            background: #333;
+            color: whitesmoke;
+            font-family: "Microsoft YaHei UI Light";
+        }
+
+        .box p {
+            font-size: 30px;
+            margin-top: 12%;
+            margin-bottom: 8%;
+        }
+
+        input {
+            letter-spacing: 0.6em;
+            font-weight: bold;
+        }
+
+        .control-label {
+
+        }
+
+        footer {
+            position: absolute;
+            bottom: 2pc;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container box" style="text-align: center">
+    <p>登录 - 深度好文博客</p>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">用户名</label>
+            <div class="col-sm-10 has-success has-feedback">
+                <input type="text" class="form-control" id="username" placeholder="Username（3-12位）" maxlength="12"
+                       autofocus
+                       autocomplete="off">
+                <span id="TUsername" class="glyphicon glyphicon-ok form-control-feedback sr-only"
+                      aria-hidden="true"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Password" class="col-sm-2 control-label">密　码</label>
+            <div class="col-sm-10 has-success has-feedback">
+                <input type="password" class="form-control" id="password" placeholder="Password（8-16位）" maxlength="16"
+                       autocomplete="off">
+                <span id="TPassword" class="glyphicon glyphicon-ok form-control-feedback sr-only"
+                      aria-hidden="true"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="checkbox">
+                    <label style="padding-left: 0">
+                        <span id="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button type="button" id="login" onclick="jump()" class="btn btn-default disabled">　登 录　
+                </button>
+                <span id="tip" style="display: block;margin-top: 1pc;color: #00A2D4;font-size: 14px">未注册的账户会自动注册，请牢记您的用户名和密码</span>
+            </div>
+        </div>
+    </form>
+</div>
+<footer>© 2016-2017 深度好文博客 Power by <a href="http://hpu.lifanko.cn">lifanko</a></footer>
+<script src="__RES__/common/jquery-2.1.1.min.js"></script>
+<script src="__RES__/login/login.js"></script>
+<script src="__RES__/login/slider.min.js"></script>
+<script>
+    $("#login").fadeOut(0);
+    $("#slider").slider({
+        callback: function (result) {
+            if (result) {
+                tip = $("#tip");
+                var ULength = document.getElementById("username").value.length;
+                var PLength = document.getElementById("password").value.length;
+                checkU(ULength, PLength);
+                if (ULength >= 3 && ULength <= 12 && PLength >= 8 && PLength <= 16) {
+                    var url = "/login/Index/login";
+                    $.post(url, {username: $("#username").val(), password: $("#password").val()}, function (data) {
+                        var login = $("#login");
+                        if (data == "null") {
+                            tip.text("点击按钮后将为您创建博客账号：" + $("#username").val());
+                            login.text("　注册 & 登录　");
+                            login.removeClass('disabled').addClass('btn-success');
+                            login.fadeIn(300);
+                        } else if (data.substring(0, 3) == "你好！") {
+                            login.text("　登 录　");
+                            login.removeClass('disabled').addClass('btn-success');
+                            login.fadeIn(300);
+                            tip.text("");
+                        } else if (data == "密码错误") {
+                            tip.text("密码错误");
+                            $("#slider").slider("restore");
+                            blink(3);
+                        }
+                    }).error(function () {
+                        tip.text("网络错误，请稍后重试");
+                        blink(3);
+                    });
+                } else {
+                    tip.text("用户名或密码长度不符合要求");
+                    $("#slider").slider("restore");
+                    blink(3);
+                }
+            }
+        }
+    });
+    function blink(n) {
+        for (var i = 0; i < n; i++) {
+            tip.fadeOut(100);
+            tip.fadeIn(100);
+        }
+    }
+    function checkU(ULength, PLength) {
+        var TUsername = $("#TUsername");
+        var TPassword = $("#TPassword");
+
+        if (ULength >= 3) {
+            TUsername.removeClass('glyphicon-warning-sign sr-only');
+            TUsername.addClass('glyphicon-ok');
+        } else {
+            TUsername.removeClass('glyphicon-ok sr-only');
+            TUsername.addClass('glyphicon-warning-sign');
+        }
+        if (PLength >= 8) {
+            TPassword.removeClass('glyphicon-warning-sign sr-only');
+            TPassword.addClass('glyphicon-ok');
+        } else {
+            TPassword.removeClass('glyphicon-ok sr-only');
+            TPassword.addClass('glyphicon-warning-sign');
+        }
+    }
+    function jump() {
+        if ($("#login").text() == "　注册 & 登录　") {
+            tip = $("#tip");
+            var url = "/login/Index/register";
+            $.post(url, {username: $("#username").val(), password: $("#password").val()}, function (data) {
+//              延迟2s跳转到博客主页
+                if (data == "注册成功，正在登录") {
+                    tip.text("注册成功，正在登录...");
+                    setTimeout(function () {
+                        window.location = '/blog';
+                    }, 1500);
+                }
+            }).error(function () {
+                tip.text("网络错误，请稍后重试");
+                blink(3);
+            });
+        } else {
+            tip.text("登录成功，正在跳转...");
+            setTimeout(function () {
+                history.go(-1)
+            }, 1500)
+        }
+    }
+</script>
+</body>
+</html>

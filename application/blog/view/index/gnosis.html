@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>创作 - 深度好文</title>
+    <link rel="icon" href="__RES__/common/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/common/bootstrapv3.3.0.min.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/blog/simditor/styles/simditor.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/blog/simditor/styles/simditor-emoji.css">
+    <script type="text/javascript" src="__RES__/common/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__RES__/blog/simditor/scripts/module.min.js"></script>
+    <script type="text/javascript" src="__RES__/blog/simditor/scripts/hotkeys.min.js"></script>
+    <script type="text/javascript" src="__RES__/blog/simditor/scripts/uploader.min.js"></script>
+    <script type="text/javascript" src="__RES__/blog/simditor/scripts/simditor.js"></script>
+    <script type="text/javascript" src="__RES__/blog/simditor/scripts/simditor-emoji.js"></script>
+    <style>
+        .space {
+            position: fixed;
+            margin: 40px 0 0 66pc;
+            z-index: 11;
+            cursor: pointer;
+        }
+
+        .space:hover .spaceTip {
+            display: block;
+        }
+
+        .spaceTip {
+            font-size: 12px;
+            width: 300px;
+            margin-left: -217px;
+            background-color: #eee;
+            padding: 0.5pc 1pc;
+            margin-top: 13px;
+            box-shadow: #bbb 0 5px 12px;
+            border-radius: 3px;
+            display: none;
+        }
+
+        /*图片最大限制*/
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        #autoSave {
+            transition: all 0.6s 0s;
+            height: 1px;
+            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="space">
+        格式化缩进
+        <p class="spaceTip">
+            功能描述：<br>
+            将文章内所有半角空格转为全角空格。<br>
+            格式化前：<span style="background-color: #bcd4dc">&nbsp;&nbsp;我是一个自然段</span><br>
+            格式化后：<span style="background-color: #bcd4dc">　　我是一个自然段</span><br>
+            使用说明：书写文章时在段首添加两个空格，然后点击此选项即可为文章添加两个字的缩进，
+            不必每写一段就进行一次缩进操作，此功能可同时操作多段。
+        </p>
+    </div>
+    <h1 style="text-align: center">{$title}<span
+            style="font-size: 13px;color: grey;text-indent: 1em;display: inline-block">{$author}</span>
+    </h1>
+    <input id="textContainer" type="hidden" name="textContent" value="">
+    <textarea id="editor" placeholder="" autofocus></textarea>
+    <div id="autoSave"></div>
+    <div style="margin-top: 1em;height: 34px">
+        <button id="manual" onclick="Save();" class="btn btn-success">保存</button>
+        <button id="auto" onclick="autoSave(true);" class="btn btn-link" style="width: 110px">激活自动保存</button>
+        <button id="unAuto" onclick="autoSave(false);" class="btn btn-link" style="width: 110px;display: none">使用手动保存
+        </button>
+
+        <span id="tip" class="badge"></span>
+
+        <div style="float: right">
+            <a class="btn btn-link" href="/blog/{$id}" target="_blank">预览</a>
+            <a class="btn btn-link" href="/blog/zone">返回我的创作中心</a>
+        </div>
+    </div>
+
+    <hr>
+
+    <div style="color: grey;line-height: 25px">
+        <details style="margin-top: 5px;cursor: crosshair">
+            <summary>Editor Tips:</summary>
+            1、缩进有记忆，使用tab后进入新行仍有缩进；<br>
+            2、离开编辑器前<span style="color: #F40">记得点击保存</span>；<br>
+            2、自动保存周期为<span style="color: #F40">30S</span>。
+            <hr style="margin: 10px">
+            <p>{$app}</p>
+        </details>
+    </div>
+</div>
+<script>
+    String.prototype.strip = function () {
+        var reTag = /<(?:.|\s)*?>/g;
+        return this.replace(reTag, "");
+    }
+</script>
+<script>
+    var editor = new Simditor({
+        textarea: $('#editor'),
+        placeholder: '拾穗：<br>　　{$maxim}',
+        defaultImage: '__RES__/blog/simditor/images/image.png',
+        params: {},
+        upload: {
+            url: '/blog/service?option=imgUpload',
+            params: null,
+            fileKey: 'upload_file',
+            connectionCount: 1,
+            leaveConfirm: '图片正在上传，确定离开吗？'
+        },
+        tabIndent: true,
+        imageButton: 'upload',
+        toolbar: [
+            'title',
+            'bold',
+            'italic',
+            'underline',
+            'color',
+            'fontScale',
+            'ol',
+            'ul',
+            'code',
+            'table',
+            'image',
+            'link',
+            'indent',
+            'outdent',
+            'alignment',
+            'hr',
+            'emoji'
+        ],
+        toolbarFloat: true,
+        toolbarFloatOffset: 30,
+        toolbarHidden: false,
+        pasteImage: false,
+        cleanPaste: false,
+        emoji: {
+            imagePath: '__RES__/blog/simditor/images/emoji/'
+        }
+    });
+    $(document).ready(function () {
+        editor.setValue('{$body}');
+        $(".space").on("click", function () {
+            editor.setValue(editor.getValue().replace(/&nbsp; /g, "　　"));
+        })
+    });
+
+    String.prototype.strip = function () {
+        var reTag = /<(?:.|\s)*?>/g;
+        return this.replace(reTag, "");
+    };
+
+    function Save() {
+        var tip = document.getElementById("tip");
+        var textContainer = document.getElementById("textContainer");
+        textContainer.value = editor.getValue();
+
+        tip.innerText = "正在保存···";
+        $.post("/blog/service?option=save", {
+            id: "{$id}",
+            textContent: textContainer.value,
+            length: textContainer.value.strip().length
+        }, function (data) {
+            tip.innerText = data;
+        }).error(function () {
+            tip.innerText = "网络错误，请稍后重试";
+        });
+
+        i = 100;
+    }
+
+    autoSave(true);
+
+    var i = 100, timer;    //自动保存计时器
+    function autoSave(s) {
+        if (s) {
+            $("#auto").slideUp(100);
+            $("#unAuto").delay(100).slideDown(100);
+
+            timer = setInterval(function () {   //20s钟进行一次保存
+                if (i--) {
+                    document.getElementById("autoSave").style.width = i + "%";
+                    $("#manual").text((i / 10).toFixed(1));
+                } else {
+                    Save();
+                }
+            }, 300)
+        } else {
+            $("#manual").text("保存");
+            $("#auto").delay(100).slideDown(100);
+            $("#unAuto").slideUp(100);
+            clearInterval(timer);
+            i = 100;
+            document.getElementById("autoSave").style.width = i + "%";
+        }
+    }
+</script>
+</body>
+</html>
