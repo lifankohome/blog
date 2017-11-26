@@ -1,9 +1,5 @@
 ## 深度好文博客 Base On ThinkPHP5
 
-### 预览：
-
-![布洛格截图](https://raw.githubusercontent.com/lifankohome/blog/master/screenshot.jpg)
-
 ### 安装：
 
  + 获取TP5源代码
@@ -93,3 +89,7 @@ $image->text($author . '-深度好文', './static/font/boleyaya.ttf', 12, 'auto'
 ### 演示地址：
 
 我的博客：http://hpu.lifanko.cn/blog
+
+### Demo：
+
+![布洛格截图](https://raw.githubusercontent.com/lifankohome/blog/master/screenshot.jpg)
