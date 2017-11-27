@@ -77,7 +77,6 @@ www  WEB部署目录（或者子目录）
 $image->text($author . '-深度好文', './static/font/boleyaya.ttf', 12, 'auto', $image::WATER_SOUTHEAST, [-10, -5])->save($new_file);
 ```
 
-
 ### 提示&注意：
 
  + 博客无法在移动端登录
