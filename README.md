@@ -16,7 +16,7 @@
 'url_param_type' => 0 改为：'url_param_type' => 1
 ```
 
- + 安装图像处理依赖项(如果在/vendor/中库已存在可省略)：
+ + 安装图像处理依赖项(如果在 /vendor/ 中库已存在可省略)：
 ```
 composer require topthink/think-image
 ```
