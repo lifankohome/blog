@@ -7,29 +7,36 @@
  + 将代码文件对应增量复制进TP5框架
  
  + 获取simditor（2.3.6）源代码 + Emoji 插件代码，并将其复制进以下文件夹：
-````
+ 
+```
 /public/static/blog/simditor
-````
+```
 
  + 将 /Application/config.php 中：
+ 
 ```
 'url_param_type' => 0 改为：'url_param_type' => 1
 ```
 
- + 安装图像处理依赖项(如果在 /vendor/ 中库已存在可省略)：
-```
-composer require topthink/think-image
-```
+ + 配置数据表：
 
-### 数据库（MySQL）：
+```
+博客平台运行需要三张数据表，完成以上步骤后在浏览器访问：
 
-博客共涉及一个数据库（lifanko），三张数据表（blog、comment、gnosis），blog用于保存用户信息，comment用于保存评论，gnosis用于保存博客。
+域名/blog/install/数据库名称
+
+即可在‘数据库名称’数据库中自动建立所需数据表。
+```
+ 
+### 数据库信息（MySQL）：
+
+博客共涉及一个数据库，三张数据表（blog、comment、gnosis），blog用于保存用户信息，comment用于保存评论，gnosis用于保存博客。
 
  + blog字段：id（自增主键），username（varchar，16，默认无），password（varchar，48，默认无），date(varchar，16，默认无)。
 
  + comment字段：id(自增主键)，uuid（varchar，8，默认无），title（varchar，64，默认无），comment（varchar，4096，默认无）。
 
- + gnosis字段：id（自增主键），name（varchar，8，默认无），head（varchar，32，默认无），length（varchar，8，默认0），saved（varchar，32，默认无），date（varchar，32，默认无），good（varchar，8，默认0），bad（varchar，8，默认0），status（varchar，16，默认gnosising），time（varchar，32，默认无），times（varchar，8，默认0），reEdit（varchar，1，默认3）。
+ + gnosis字段：id（自增主键），name（varchar，8，默认无），body（text，默认无），head（varchar，32，默认无），length（varchar，8，默认0），saved（varchar，32，默认无），date（varchar，32，默认无），good（varchar，8，默认0），bad（varchar，8，默认0），status（varchar，16，默认gnosising），time（varchar，32，默认无），times（varchar，8，默认0），reEdit（varchar，1，默认3）。
 
 ### 目录结构
 ```
@@ -45,6 +52,10 @@ www  WEB部署目录（或者子目录）
 │  │  └─view            视图目录
 │  └─route.php          路由配置文件
 │
+├─extend                第三方类库目录
+│  └─think              命名空间自动加载
+│  │  └─Maxim.php       箴言爬虫
+│
 ├─public                WEB目录（对外访问目录）
 │  ├─blog               静态文件
 │  │  ├─Logo            评论头像目录
@@ -53,11 +64,6 @@ www  WEB部署目录（或者子目录）
 │  ├─font               字体文件
 │  └─login              登录静态文件
 │  │  └─img             登录界面所需图片
-│
-├─thinkphp              框架系统目录
-│  ├─library            框架类库目录
-│  │  └─think           Think类库包目录
-│  │  │  └─Maxim.php    箴言爬虫
 │
 ├─vendor                框架系统目录
 │  ├─topthink           框架类库目录
