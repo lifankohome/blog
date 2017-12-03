@@ -6,6 +6,7 @@ use app\blog\model\Gnosis;
 use app\blog\model\Passage;
 use app\blog\model\Zone;
 use think\Controller;
+use think\Db;
 use think\Image;
 use think\Maxim;
 use think\Request;
@@ -47,8 +48,6 @@ class Index extends Controller
 
         //版权信息
         $this->assign('app', $this->app);
-
-//        print_r($comment);
 
         return $this->fetch();
     }
@@ -343,6 +342,40 @@ class Index extends Controller
             } else {
                 return false;
             }
+        } else {
+            return false;
+        }
+    }
+
+    public function install($database = '')
+    {
+        $sqlBlog = "CREATE TABLE `$database`.`blog` ( `id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(16) NOT NULL , `password` VARCHAR(48) NOT NULL , `date` VARCHAR(16) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = '深度好文博客用户表'";
+        $sqlComment = "CREATE TABLE `$database`.`comment` ( `id` INT NOT NULL AUTO_INCREMENT , `uuid` VARCHAR(8) NOT NULL , `title` VARCHAR(64) NOT NULL , `comment` VARCHAR(4096) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = '深度好文博客评论表'";
+        $sqlGnosis = "CREATE TABLE `$database`.`gnosis` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(8) NOT NULL , `head` VARCHAR(32) NOT NULL , `body` text NOT NULL , `length` VARCHAR(8) NOT NULL , `saved` VARCHAR(32) NOT NULL , `date` VARCHAR(32) NOT NULL , `good` VARCHAR(8) NOT NULL DEFAULT '0' , `bad` VARCHAR(8) NOT NULL DEFAULT '0' , `status` VARCHAR(16) NOT NULL DEFAULT 'gnosising' , `time` VARCHAR(32) NOT NULL , `times` VARCHAR(8) NOT NULL DEFAULT '0' , `reEdit` VARCHAR(1) NOT NULL DEFAULT '3' , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = '深度好文博客表'";
+
+        if(!empty($database)){
+            //创建三张所需数据表
+            if(!$this->isTableExist($database,'blog')){
+                Db::execute($sqlBlog);
+            }
+            if(!$this->isTableExist($database,'comment')){
+                Db::execute($sqlComment);
+            }
+            if(!$this->isTableExist($database,'gnosis')){
+                Db::execute($sqlGnosis);
+            }
+
+            return '<h1 style="text-align: center;margin-top: 20%">Congratulations!<br><br><span style="font-size: 50px">Blog SetUp Complete</span></h1>';
+        }else{
+            return '<h1 style="text-align: center;margin-top: 20%">请在URL尾部添加要安装进的数据库名<br><br><span style="font-size: 30px">Please input the name of the database you want to install at the end of URL</span></h1>';
+        }
+    }
+
+    private function isTableExist($DbName, $tableName)
+    {
+        $sql = "select count(*) from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='$DbName' and TABLE_NAME = '$tableName'";
+        if (Db::query($sql)[0]['count(*)']) {
+            return true;
         } else {
             return false;
         }

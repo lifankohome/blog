@@ -30,5 +30,6 @@ return [
     'blog/gnosis/[:id]' => 'blog/index/gnosis',
     'blog/rename' => 'blog/index/rename',
     'blog/errCode' => 'blog/index/errCode',
-    'blog/service' => 'blog/index/service'
+    'blog/service' => 'blog/index/service',
+    'blog/install/[:database]' => 'blog/index/install'
 ];
